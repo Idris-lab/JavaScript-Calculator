@@ -9,6 +9,13 @@ const three = document.getElementById("three");
 const four = document.getElementById("four");
 const five = document.getElementById("five");
 const six = document.getElementById("six");
+const seven = document.getElementById("seven");
+const eight = document.getElementById("eight");
+const nine = document.getElementById("nine");
+const add = document.getElementById("add");
+const subtract = document.getElementById("subtract");
+const divide = document.getElementById("divide");
+
 
 
 
@@ -86,7 +93,6 @@ six.addEventListener("click", () => {
 
 seven.addEventListener("click", () => {
 	display = document.getElementById("display");
-	let seven = document.getElementById("seven");
 	shallNotBeginWithZero(display, seven);
 
 
@@ -95,7 +101,6 @@ seven.addEventListener("click", () => {
 eight.addEventListener("click", () => {
 
 	display = document.getElementById("display");
-	let eight = document.getElementById("eight");
 	shallNotBeginWithZero(display, eight);
 
 
@@ -103,7 +108,6 @@ eight.addEventListener("click", () => {
 
 nine.addEventListener("click", () => {
 	display = document.getElementById("display");
-	let nine = document.getElementById("nine");
 	shallNotBeginWithZero(display, nine);
 
 
@@ -112,7 +116,6 @@ nine.addEventListener("click", () => {
 add.addEventListener("click", () => {
 
 	display = document.getElementById("display");
-	let add = document.getElementById("add");
 	display.textContent += ' + ';
 
 });
@@ -120,7 +123,6 @@ add.addEventListener("click", () => {
 subtract.addEventListener("click", () => {
 
 	display = document.getElementById("display");
-	let subtract = document.getElementById("subtract");
 	display.textContent += ' - ';
 
 });
@@ -128,7 +130,6 @@ subtract.addEventListener("click", () => {
 divide.addEventListener("click", () => {
 
 	display = document.getElementById("display");
-	let divide = document.getElementById("divide");
 	display.textContent += ' / ';
 
 });
@@ -210,23 +211,26 @@ function shallNotBeginWithZero(displayArgument, input) {
 }
 
 
-function revomeEmptyStrings(arr){
+function revomeEmptyStrings(arr) {
+	if (!arr.includes("")) return false;
+
 	arr.forEach((element, index) => {
-		if (element === "") {
+		if (element === "")
 			arr.splice(index, 1);
-		}
+
 	})
 }
 
-function performLastOperationForMul(arr, mulIndex){
-	
-	let arr2 = [];
+function performLastOperationForMul(arr, mulIndex) {
+
+	let arr2 = [], index;
 
 	if (arr[mulIndex + 1] === '+') {
 
 
 		arr.splice(mulIndex + 1, 1);
 		mulIndex = arr.indexOf('*');
+		index = mulIndex;
 		arr2 = arr.slice(mulIndex - 1, mulIndex + 2);
 
 
@@ -234,36 +238,162 @@ function performLastOperationForMul(arr, mulIndex){
 
 		arr.splice(mulIndex, 2, '*-');
 		mulIndex = arr.indexOf('*-');
+		index = mulIndex;
 		arr2 = arr.slice(mulIndex - 1, mulIndex + 2);
 
 	} else {
-
+		index = mulIndex;
 		arr2 = arr.slice(mulIndex - 1, mulIndex + 2);
 	}
 
-	return arr2;
+	return [arr2, index];
 }
 
-function performLastOperationForDiv(arr, divIndex){
-	let arr2 = [];
+function performLastOperationForDiv(arr, divIndex) {
+
+	let arr2 = [], index;
 
 	if (arr[divIndex + 1] === '+') {
 
 		arr.splice(divIndex + 1, 1);
 		divIndex = arr.indexOf('/');
+		index = divIndex;
 		arr2 = arr.slice(divIndex - 1, divIndex + 2);
 
 	} else if (arr[divIndex + 1] === '-') {
 
 		arr.splice(divIndex + 1, 2, '/-');
 		divIndex = arr.indexOf('/-');
+		index = divIndex;
 		arr2 = arr.slice(divIndex - 1, divIndex + 2);
 
 	} else {
+		index = divIndex;
 		arr2 = arr.slice(divIndex - 1, divIndex + 2);
 	}
 
-	return arr2
+	return [arr2, index];
+
+}
+
+function trackConsecutiveOperators(mulIndex, count, arr, recorder) {
+	recorder = mulIndex;
+	while (!isFinite(arr[recorder])) {
+		count++;
+		recorder++
+	}
+
+	return [count, recorder];
+}
+
+function performLastOperationForMul2(count, arr, j, mulIndex) {
+	let indexOfOp3, op3, arr2, index;
+
+	if (count === 3) {
+
+		op3 = arr[j - 1];
+		indexOfOp3 = arr.indexOf(op3);
+		arr.splice(indexOfOp3 - 2, 2);
+		indexOfOp3 = arr.indexOf(op3);
+		arr2 = arr.slice(indexOfOp3 - 1, indexOfOp3 + 2);
+
+	} else if (arr[mulIndex + 1] === '+') {
+
+		arr.splice(mulIndex + 1, 1);
+		mulIndex = arr.indexOf('*');
+		index = mulIndex;
+		arr2 = arr.slice(mulIndex - 1, mulIndex + 2);
+
+	} else if (arr[mulIndex + 1] === '-') {
+
+		arr.splice(mulIndex, 2, '*-');
+		mulIndex = arr.indexOf('*-');
+		index = mulIndex;
+		arr2 = arr.slice(mulIndex - 1, mulIndex + 2);
+
+	} else {
+
+		index = arr.indexOf('*');
+		arr2 = arr.slice(index - 1, index + 2);
+	}
+
+	return [arr2, index];
+}
+
+function performLastOperationForDiv2(arr, divIndex) {
+
+	let arr2, index;
+
+	if (arr[divIndex + 1] === '+') {
+
+		arr.splice(divIndex + 1, 1);
+		divIndex = arr.indexOf('/');
+		index = divIndex;
+		arr2 = arr.slice(divIndex - 1, divIndex + 2);
+
+	} else if (arr[divIndex + 1] === '-') {
+
+		arr.splice(divIndex, 2, '/-');
+		divIndex = arr.indexOf('/-');
+		index = divIndex;
+		arr2 = arr.slice(divIndex - 1, divIndex + 2);
+
+	} else {
+
+		index = arr.indexOf('/');
+		arr2 = arr.slice(index - 1, index + 2);
+	}
+
+	return [arr2, index];
+}
+
+function performOrderOfOperationForAddAndSub(arr, addIndex, subIndex) {
+
+	let arr2, index;
+
+	if (addIndex < subIndex) {
+
+		index = addIndex;
+		arr2 = arr.slice(addIndex - 1, addIndex + 2);
+
+	} else {
+		index = subIndex;
+		arr2 = arr.slice(subIndex - 1, subIndex + 2);
+	}
+
+	return [arr2, index];
+}
+
+
+function performAddition(arr, addIndex) {
+
+	let arr2, index;
+
+	if (arr[addIndex + 1] === '+') {
+
+		arr.splice(addIndex, 1);
+		addIndex = arr.indexOf('+');
+		index = addIndex;
+		arr2 = arr.slice(addIndex - 1, addIndex + 2);
+
+	} else {
+		index = arr.indexOf('+');
+		arr2 = arr.slice(index - 1, index + 2);
+	}
+
+	return [arr2, index];
+}
+
+
+function performSubtraction(arr, subIndex) {
+
+	let arr2, index;
+
+	subIndex = arr.indexOf('-');
+	arr2 = arr.slice(subIndex - 1, subIndex + 2);
+	index = subIndex;
+
+	return [arr2, index];
 }
 
 
@@ -284,7 +414,7 @@ function Calculator() {
 		let index, result, newArr = [];
 		let arrCpy = [...arr];
 
-		
+
 		revomeEmptyStrings(arrCpy);
 
 
@@ -295,120 +425,56 @@ function Calculator() {
 
 			if (arrCpy.includes('*') && arrCpy.includes('/')) {
 
-				
+
 				mul = arrCpy.indexOf('*');
 				div = arrCpy.indexOf('/');
 
-				
+
 				if (mul < div) {
 
-					newArr = performLastOperationForMul(arrCpy, mul);
-					index = mul;
+					[newArr, index] = performLastOperationForMul(arrCpy, mul);
+
 
 				} else if (div < mul) {
 
-					newArr = performLastOperationForDiv(arrCpy, div);
-					index = div;
+					[newArr, index] = performLastOperationForDiv(arrCpy, div);
+
 
 				}
 
 			} else if (arrCpy.includes('*')) {
 
 				mul = arrCpy.indexOf('*');
+				let count = 0, j;
 
-				let i = mul, count = 0, op3, indexOfOp3;
+				[count, j] = trackConsecutiveOperators(mul, count, arrCpy, j);
 
-				while (!isFinite(arrCpy[i])) {
-					count++;
-					i++;
-				}
+				[newArr, index] = performLastOperationForMul2(count, arrCpy, j, mul);
 
-				if (count === 3) {
-
-					op3 = arrCpy[i - 1];
-					indexOfOp3 = arrCpy.indexOf(op3);
-					arrCpy.splice(indexOfOp3 - 2, 2);
-					indexOfOp3 = arrCpy.indexOf(op3);
-					newArr = arrCpy.slice(indexOfOp3 - 1, indexOfOp3 + 2);
-					
-				}else if (arrCpy[mul + 1] === '+') {
-
-					arrCpy.splice(mul + 1, 1);
-					mul = arrCpy.indexOf('*');
-					index = mul;
-					newArr = arrCpy.slice(mul - 1, mul + 2);
-
-				} else if (arrCpy[mul + 1] === '-') {
-
-					arrCpy.splice(mul, 2, '*-');
-					mul = arrCpy.indexOf('*-');
-					index = mul;
-					newArr = arrCpy.slice(mul - 1, mul + 2);
-
-				} else {
-
-					index = arrCpy.indexOf('*');
-					newArr = arrCpy.slice(index - 1, index + 2);
-				}
 			} else if (arrCpy.includes('/')) {
 
 				div = arrCpy.indexOf('/');
 
-
-				if (arrCpy[div + 1] === '+') {
-
-					arrCpy.splice(div + 1, 1);
-					div = arrCpy.indexOf('/');
-					index = div;
-					newArr = arrCpy.slice(div - 1, div + 2);
-
-				} else if (arrCpy[div + 1] === '-') {
-
-					arrCpy.splice(div, 2, '/-');
-					div = arrCpy.indexOf('/-');
-					index = div;
-					newArr = arrCpy.slice(div - 1, div + 2);
-
-				} else {
-
-					index = arrCpy.indexOf('/');
-					newArr = arrCpy.slice(index - 1, index + 2);
-				}
+				[newArr, index] = performLastOperationForDiv2(arrCpy, mul);
 
 			} else if (arrCpy.includes('+') && arrCpy.includes('-')) {
 
 				add = arrCpy.indexOf('+');
 				sub = arrCpy.indexOf('-');
 
-				if (add < sub) {
-					index = add;
-					newArr = arrCpy.slice(add - 1, add + 2)
-				} else {
-					index = sub;
-					newArr = arrCpy.slice(sub - 1, sub + 2);
-				}
+				[newArr, index] = performOrderOfOperationForAddAndSub(arrCpy, add, sub);
 
 			} else if (arrCpy.includes('+')) {
 
 				add = arrCpy.indexOf('+');
 
-				if (arrCpy[add + 1] === '+') {
-
-					arrCpy.splice(add, 1);
-					add = arrCpy.indexOf('+');
-					index = add;
-					newArr = arrCpy.slice(add - 1, add + 2);
-
-				}else{
-					index = arrCpy.indexOf('+');
-					newArr = arrCpy.slice(index - 1, index + 2);
-				}
-				
+				[newArr, index] = performAddition(arrCpy, add);
 
 			} else if (arrCpy.includes('-')) {
 
-				index = arrCpy.indexOf('-');
-				newArr = arrCpy.slice(index - 1, index + 2);
+				sub = arrCpy.indexOf('-');
+
+				[newArr, index] = performSubtraction(arrCpy, sub);
 
 			} else {
 				break;
