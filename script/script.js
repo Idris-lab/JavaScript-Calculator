@@ -15,9 +15,33 @@ const nine = document.getElementById("nine");
 const add = document.getElementById("add");
 const subtract = document.getElementById("subtract");
 const divide = document.getElementById("divide");
+const thousand = document.getElementById("thousand");
 
 
+function dontBeginWithZero(exp){
 
+	if (exp[0] == 0 && exp.length == 1) {
+		return false;
+	} 
+	display.textContent += '0';
+}
+
+function dontBeginWithThousand(exp){
+	
+	if (exp[0] == 0 && exp.length == 1) {
+		return false;
+	} 
+	display.textContent += '000';
+}
+
+thousand.addEventListener('click', () => {
+	display = document.getElementById("display");
+
+	let expression = display.textContent;
+
+	dontBeginWithThousand(expression);
+	
+});
 
 clear.addEventListener('click', () => {
 	display = document.getElementById("display").textContent = 0;
@@ -29,20 +53,9 @@ zero.addEventListener('click', () => {
 
 	let expression = display.textContent;
 
-	if (expression[0] == 0 && expression.length == 1) {
-		//return true;
-	} else {
-		display.textContent += '0';
-	}
+	dontBeginWithZero(expression);
+	
 
-
-	display.textContent.split(' ').forEach(element => {
-		console.log(display.textContent.indexOf(element));
-		if (element[0] == 0 && element[1] == 0) {
-			//const index = display.textContent.indexOf(element)
-			//element.replace
-		}
-	});
 
 });
 
@@ -184,18 +197,6 @@ decimal.addEventListener('click', () => {
 });
 
 
-
-// document.addEventListener('keydown', (event) => {
-// 	console.log(event.keyCode);
-// 	display = document.getElementById("display");
-// 	display.textContent += '.';
-// 	let decimal = document.getElementById("decimal");
-// 	if (event.keyCode === 190 && display.textContent.indexOf('.') !== -1) {
-// 		return false;
-// 	}
-
-
-//});
 
 
 //Ensure that first input does not begin with a zero
@@ -496,8 +497,6 @@ function Calculator() {
 		}
 		return result
 	}
-	// this.addMethods = function(name, func){
-	// 	this.methods[name] = func;
-	// }
+	
 }
 

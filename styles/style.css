@@ -1,73 +1,87 @@
-*, *::before, *::after{
-    font-family: 'Mukta' sans-serif;
-    box-sizing: inherit;
-    margin:0;
-    padding: 0;
-}
+
 
 html{
     box-sizing: border-box;
+    font-family: 'Mukta', sans-serif;
+
 }
 
-h1{
+h3{
     text-align: center;
-    margin: 2em 0 0 0;
+    margin: 1em 0 0 0;
     text-transform: uppercase;
+
 }
 
 #calculator-container{
-    position: absolute;
+    margin: 3em auto;
+    background-color: #1f2e2e;
+    border-radius: 10px;
+    width: 300px;
+    color: white;
+    overflow: hidden;
+    
+    /*position: absolute;
     left: 50%;
     top:50%;
     transform: translate(-50%, -50%);
-    background-color: #e0e0de;
-    border-radius: 5px;
-    padding: 10px;
-    width: 300px;
-    font-size: 1.04em;
+    */
+}
+
+
+#display{
+    width: 80%;
+    height: 150px;
+    text-align: right;
+    margin: 10px auto;
+    font-size: 1.5em;
+    line-height: 250px;
+
+}
+
+hr{
+    height: 2px;
+    border: none;
+    background-color: #3399ff;
+    margin-bottom: 10px;
     
 }
 
-#display{
-    width: 100%;
-    height: 200px;
-    text-align: right;
-    margin-bottom: 10px;
-}
 
 .controls-container{
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    height: 100%;
+    padding: 10px;
+    gap: 10px;
+
 }
 #equals{
    grid-row-start: 4;
    grid-row-end: 6; 
-   grid-column-start: 4;
-   grid-column-end: 4;
+   grid-column: 4/4;
    height: 100%;
    background-color: #3399ff;
 }
 
 #clear, #zero{
     grid-column-start: 1;
-    grid-column-end: 3;
+    grid-column-end: 2;
 
 }
 #clear{
     background-color: #ff3300;
     color:#ffffff;
+    grid-column: span 2;
 }
 
 button{
   height: 50px;
-  border: 1px solid #808080;
+  border: none;
   color:#ffffff;
   background-color: #1f2e2e;
 
 }
 
 button:hover{
-    transition: 0.5s;
-    color: #808080;
+    border: 1px solid #000;
 }
